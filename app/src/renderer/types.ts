@@ -3,6 +3,7 @@ export interface NotificationPayload {
   message: string;
   accentColor: string;
   folder?: string;
+  autoDismiss?: boolean;
 }
 
 export interface ElectronAPI {

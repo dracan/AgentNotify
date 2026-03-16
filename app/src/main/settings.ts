@@ -6,10 +6,12 @@ export type PopupPosition = 'bottom-left' | 'bottom-center' | 'bottom-right';
 
 interface Settings {
   position: PopupPosition;
+  autoDismiss: boolean;
 }
 
 const DEFAULT_SETTINGS: Settings = {
   position: 'bottom-right',
+  autoDismiss: true,
 };
 
 function getSettingsPath(): string {
@@ -36,5 +38,15 @@ export function getPosition(): PopupPosition {
 export function setPosition(pos: PopupPosition): void {
   const settings = readSettings();
   settings.position = pos;
+  writeSettings(settings);
+}
+
+export function getAutoDismiss(): boolean {
+  return readSettings().autoDismiss;
+}
+
+export function setAutoDismiss(value: boolean): void {
+  const settings = readSettings();
+  settings.autoDismiss = value;
   writeSettings(settings);
 }

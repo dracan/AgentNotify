@@ -1,6 +1,6 @@
 import { Tray, Menu, nativeImage, app } from 'electron';
 import * as path from 'path';
-import { getPosition, setPosition, PopupPosition } from './settings';
+import { getPosition, setPosition, PopupPosition, getAutoDismiss, setAutoDismiss } from './settings';
 
 let tray: Tray | null = null;
 
@@ -38,6 +38,15 @@ function buildContextMenu(): Electron.Menu {
           },
         },
       ],
+    },
+    {
+      label: 'Auto Dismiss',
+      type: 'checkbox',
+      checked: getAutoDismiss(),
+      click: (menuItem) => {
+        setAutoDismiss(menuItem.checked);
+        tray?.setContextMenu(buildContextMenu());
+      },
     },
     { type: 'separator' },
     {

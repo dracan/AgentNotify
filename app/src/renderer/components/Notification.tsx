@@ -27,11 +27,13 @@ export function Notification() {
       setVisible(true);
       startTimeRef.current = Date.now();
 
-      intervalRef.current = setInterval(() => {
-        const elapsed = Date.now() - startTimeRef.current;
-        const remaining = Math.max(0, 100 - (elapsed / DURATION_MS) * 100);
-        setProgress(remaining);
-      }, TICK_MS);
+      if (payload.autoDismiss !== false) {
+        intervalRef.current = setInterval(() => {
+          const elapsed = Date.now() - startTimeRef.current;
+          const remaining = Math.max(0, 100 - (elapsed / DURATION_MS) * 100);
+          setProgress(remaining);
+        }, TICK_MS);
+      }
     });
 
     return () => {
@@ -64,7 +66,9 @@ export function Notification() {
         <div className="notification-title">{data.title}</div>
         <div className="notification-message">{data.message}</div>
       </div>
-      <div className="notification-progress" style={{ width: `${progress}%`, backgroundColor: data.accentColor }} />
+      {data.autoDismiss !== false && (
+        <div className="notification-progress" style={{ width: `${progress}%`, backgroundColor: data.accentColor }} />
+      )}
     </div>
   );
 }

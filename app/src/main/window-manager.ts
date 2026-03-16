@@ -1,6 +1,6 @@
 import { BrowserWindow, screen } from 'electron';
 import * as path from 'path';
-import { getPosition } from './settings';
+import { getPosition, getAutoDismiss } from './settings';
 
 const WIDTH = 380;
 const HEIGHT = 100;
@@ -11,7 +11,7 @@ const AUTO_DISMISS_MS = 8000;
 
 interface NotificationSlot {
   window: BrowserWindow;
-  timeout: ReturnType<typeof setTimeout>;
+  timeout: ReturnType<typeof setTimeout> | null;
   slot: number;
 }
 
@@ -92,8 +92,10 @@ export function showNotification(title: string, message: string, accentColor: st
     win.loadFile(path.join(__dirname, '..', 'renderer', 'notification.html'));
   }
 
+  const autoDismiss = getAutoDismiss();
+
   win.webContents.on('did-finish-load', () => {
-    win.webContents.send('notification-data', { title, message, accentColor, folder });
+    win.webContents.send('notification-data', { title, message, accentColor, folder, autoDismiss });
   });
 
   // Show without stealing focus
@@ -101,16 +103,18 @@ export function showNotification(title: string, message: string, accentColor: st
 
   const windowId = win.id;
 
-  const timeout = setTimeout(() => {
-    dismissNotification(windowId);
-  }, AUTO_DISMISS_MS);
+  const timeout = autoDismiss
+    ? setTimeout(() => {
+        dismissNotification(windowId);
+      }, AUTO_DISMISS_MS)
+    : null;
 
   activeNotifications.set(windowId, { window: win, timeout, slot });
 
   win.on('closed', () => {
     const entry = activeNotifications.get(windowId);
     if (entry) {
-      clearTimeout(entry.timeout);
+      if (entry.timeout) clearTimeout(entry.timeout);
       activeNotifications.delete(windowId);
       reflowNotifications();
     }
@@ -122,7 +126,7 @@ export function dismissNotification(windowId: number): void {
   const entry = activeNotifications.get(windowId);
   if (!entry) return;
 
-  clearTimeout(entry.timeout);
+  if (entry.timeout) clearTimeout(entry.timeout);
   activeNotifications.delete(windowId);
 
   if (!entry.window.isDestroyed()) {
