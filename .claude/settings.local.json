@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(powershell.exe -ExecutionPolicy Bypass -NoProfile -File \"C:/Code/AgentNotify/notify.ps1\" -Title \"AgentNotify\" -Message \"Setup complete - notifications are working!\")",
+      "Bash(echo:*)",
+      "Bash(cd:*)",
+      "Bash(curl:*)"
+    ]
+  }
+}
