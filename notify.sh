@@ -17,12 +17,17 @@ if [ -n "$input" ]; then
     hook_event=$(echo "$input" | sed -n 's/.*"hook_event_name"\s*:\s*"\([^"]*\)".*/\1/p')
 fi
 
-# Extract current folder name from cwd in hook JSON, fall back to $PWD
+# Extract project root folder name (use git root if available, else cwd basename)
 cwd=$(echo "$input" | sed -n 's/.*"cwd"\s*:\s*"\([^"]*\)".*/\1/p')
 if [ -z "$cwd" ]; then
     cwd="$PWD"
 fi
-folder=$(basename "$cwd")
+git_root=$(git -C "$cwd" rev-parse --show-toplevel 2>/dev/null)
+if [ -n "$git_root" ]; then
+    folder=$(basename "$git_root")
+else
+    folder=$(basename "$cwd")
+fi
 
 # Build title, message, and accent color based on event type
 case "$hook_event" in
