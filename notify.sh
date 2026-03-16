@@ -1,9 +1,8 @@
 #!/usr/bin/env bash
 # notify.sh - Claude Code hook wrapper that sends notifications
-# Tries HTTP POST to AgentNotify Electron app first, falls back to PowerShell toast
+# Sends HTTP POST to AgentNotify Electron app
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-NOTIFY_PS1="$SCRIPT_DIR/notify.ps1"
 
 # Read JSON from stdin
 input=""
@@ -56,24 +55,11 @@ case "$hook_event" in
         ;;
 esac
 
-# Try HTTP POST to AgentNotify Electron app (1-second connect timeout)
-http_sent=false
+# Send HTTP POST to AgentNotify Electron app (1-second connect timeout)
 if command -v curl &>/dev/null; then
-    http_response=$(curl -s -o /dev/null -w "%{http_code}" \
+    curl -s -o /dev/null \
         --connect-timeout 1 --max-time 2 \
         -X POST "http://127.0.0.1:9456/notify" \
         -H "Content-Type: application/json" \
-        -d "{\"title\":\"$title\",\"message\":\"$message\",\"accentColor\":\"$accentColor\",\"folder\":\"$folder\"}" 2>/dev/null)
-    if [ "$http_response" = "200" ]; then
-        http_sent=true
-    fi
-fi
-
-# Fall back to PowerShell toast if HTTP failed
-if [ "$http_sent" = false ]; then
-    powershell.exe -ExecutionPolicy Bypass -NoProfile -File \
-        "$(cygpath -w "$NOTIFY_PS1")" \
-        -Title "$title" \
-        -Message "$message" \
-        -Folder "$folder"
+        -d "{\"title\":\"$title\",\"message\":\"$message\",\"accentColor\":\"$accentColor\",\"folder\":\"$folder\"}" 2>/dev/null
 fi
