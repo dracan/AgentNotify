@@ -60,10 +60,8 @@ export function Notification() {
     <div className={containerClass} onClick={dismiss}>
       <div className="notification-accent" style={{ backgroundColor: data.accentColor }} />
       <div className="notification-content">
-        <div className="notification-title">
-          {data.title}
-          {data.folder && <span className="notification-folder">{data.folder}</span>}
-        </div>
+        {data.folder && <div className="notification-folder">{data.folder}</div>}
+        <div className="notification-title">{data.title}</div>
         <div className="notification-message">{data.message}</div>
       </div>
       <div className="notification-progress" style={{ width: `${progress}%`, backgroundColor: data.accentColor }} />
