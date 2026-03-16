@@ -1,8 +1,8 @@
 import { contextBridge, ipcRenderer } from 'electron';
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  onNotificationData: (cb: (data: { title: string; message: string; accentColor: string }) => void): (() => void) => {
-    const handler = (_event: Electron.IpcRendererEvent, data: { title: string; message: string; accentColor: string }) => cb(data);
+  onNotificationData: (cb: (data: { title: string; message: string; accentColor: string; folder?: string }) => void): (() => void) => {
+    const handler = (_event: Electron.IpcRendererEvent, data: { title: string; message: string; accentColor: string; folder?: string }) => cb(data);
     ipcRenderer.on('notification-data', handler);
     return () => ipcRenderer.removeListener('notification-data', handler);
   },

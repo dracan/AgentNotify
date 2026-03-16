@@ -53,7 +53,7 @@ function getXPosition(): number {
   return areaX + areaW - WIDTH - MARGIN;
 }
 
-export function showNotification(title: string, message: string, accentColor: string): void {
+export function showNotification(title: string, message: string, accentColor: string, folder: string = ''): void {
   const slot = getNextSlot();
   const x = getXPosition();
   const y = getYPosition(slot);
@@ -85,7 +85,7 @@ export function showNotification(title: string, message: string, accentColor: st
   }
 
   win.webContents.on('did-finish-load', () => {
-    win.webContents.send('notification-data', { title, message, accentColor });
+    win.webContents.send('notification-data', { title, message, accentColor, folder });
   });
 
   // Show without stealing focus

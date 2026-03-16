@@ -17,8 +17,8 @@ ipcMain.on('dismiss-notification', (event) => {
 app.whenReady().then(() => {
   createTray();
 
-  createHttpServer((title, message, accentColor) => {
-    showNotification(title, message, accentColor);
+  createHttpServer((title, message, accentColor, folder) => {
+    showNotification(title, message, accentColor, folder);
   });
 
   console.log('[AgentNotify] Ready - listening on http://127.0.0.1:9456');

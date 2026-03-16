@@ -17,6 +17,9 @@ if [ -n "$input" ]; then
     hook_event=$(echo "$input" | sed -n 's/.*"hook_event_name"\s*:\s*"\([^"]*\)".*/\1/p')
 fi
 
+# Extract current folder name
+folder=$(basename "$PWD")
+
 # Build title, message, and accent color based on event type
 case "$hook_event" in
     Notification)
@@ -51,7 +54,7 @@ if command -v curl &>/dev/null; then
         --connect-timeout 1 --max-time 2 \
         -X POST "http://127.0.0.1:9456/notify" \
         -H "Content-Type: application/json" \
-        -d "{\"title\":\"$title\",\"message\":\"$message\",\"accentColor\":\"$accentColor\"}" 2>/dev/null)
+        -d "{\"title\":\"$title\",\"message\":\"$message\",\"accentColor\":\"$accentColor\",\"folder\":\"$folder\"}" 2>/dev/null)
     if [ "$http_response" = "200" ]; then
         http_sent=true
     fi
@@ -62,5 +65,6 @@ if [ "$http_sent" = false ]; then
     powershell.exe -ExecutionPolicy Bypass -NoProfile -File \
         "$(cygpath -w "$NOTIFY_PS1")" \
         -Title "$title" \
-        -Message "$message"
+        -Message "$message" \
+        -Folder "$folder"
 fi

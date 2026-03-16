@@ -1,6 +1,6 @@
 import * as http from 'http';
 
-type NotifyCallback = (title: string, message: string, accentColor: string) => void;
+type NotifyCallback = (title: string, message: string, accentColor: string, folder: string) => void;
 
 export function createHttpServer(onNotify: NotifyCallback): http.Server {
   const server = http.createServer((req, res) => {
@@ -15,8 +15,9 @@ export function createHttpServer(onNotify: NotifyCallback): http.Server {
           const title = String(data.title || 'Notification');
           const message = String(data.message || '');
           const accentColor = String(data.accentColor || '#6c9fff');
+          const folder = String(data.folder || '');
 
-          onNotify(title, message, accentColor);
+          onNotify(title, message, accentColor, folder);
 
           res.writeHead(200, { 'Content-Type': 'application/json' });
           res.end(JSON.stringify({ ok: true }));

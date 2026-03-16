@@ -2,6 +2,7 @@ export interface NotificationPayload {
   title: string;
   message: string;
   accentColor: string;
+  folder?: string;
 }
 
 export interface ElectronAPI {
