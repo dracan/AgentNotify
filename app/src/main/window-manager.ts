@@ -1,5 +1,6 @@
 import { BrowserWindow, screen } from 'electron';
 import * as path from 'path';
+import { getPosition } from './settings';
 
 const WIDTH = 380;
 const HEIGHT = 100;
@@ -50,6 +51,13 @@ function getXPosition(): number {
   const cursorPoint = screen.getCursorScreenPoint();
   const display = screen.getDisplayNearestPoint(cursorPoint);
   const { x: areaX, width: areaW } = display.workArea;
+  const pos = getPosition();
+  if (pos === 'bottom-center') {
+    return areaX + Math.round((areaW - WIDTH) / 2);
+  }
+  if (pos === 'bottom-right') {
+    return areaX + areaW - WIDTH - MARGIN;
+  }
   return areaX + MARGIN;
 }
 
