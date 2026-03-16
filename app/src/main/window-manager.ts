@@ -44,6 +44,10 @@ function getYPosition(slot: number): number {
   const cursorPoint = screen.getCursorScreenPoint();
   const display = screen.getDisplayNearestPoint(cursorPoint);
   const { y: areaY, height: areaH } = display.workArea;
+  const pos = getPosition();
+  if (pos.startsWith('top-')) {
+    return areaY + MARGIN + (HEIGHT + GAP) * slot;
+  }
   return areaY + areaH - (HEIGHT + GAP) * (slot + 1) - MARGIN + GAP;
 }
 
@@ -52,10 +56,10 @@ function getXPosition(): number {
   const display = screen.getDisplayNearestPoint(cursorPoint);
   const { x: areaX, width: areaW } = display.workArea;
   const pos = getPosition();
-  if (pos === 'bottom-center') {
+  if (pos.endsWith('-center')) {
     return areaX + Math.round((areaW - WIDTH) / 2);
   }
-  if (pos === 'bottom-right') {
+  if (pos.endsWith('-right')) {
     return areaX + areaW - WIDTH - MARGIN;
   }
   return areaX + MARGIN;

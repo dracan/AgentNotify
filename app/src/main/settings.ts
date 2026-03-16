@@ -2,7 +2,7 @@ import { app } from 'electron';
 import * as fs from 'fs';
 import * as path from 'path';
 
-export type PopupPosition = 'bottom-left' | 'bottom-center' | 'bottom-right';
+export type PopupPosition = 'top-left' | 'top-center' | 'top-right' | 'bottom-left' | 'bottom-center' | 'bottom-right';
 
 interface Settings {
   position: PopupPosition;

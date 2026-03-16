@@ -11,6 +11,33 @@ function buildContextMenu(): Electron.Menu {
       label: 'Position',
       submenu: [
         {
+          label: 'Top Left',
+          type: 'radio',
+          checked: currentPos === 'top-left',
+          click: () => {
+            setPosition('top-left');
+            tray?.setContextMenu(buildContextMenu());
+          },
+        },
+        {
+          label: 'Top Center',
+          type: 'radio',
+          checked: currentPos === 'top-center',
+          click: () => {
+            setPosition('top-center');
+            tray?.setContextMenu(buildContextMenu());
+          },
+        },
+        {
+          label: 'Top Right',
+          type: 'radio',
+          checked: currentPos === 'top-right',
+          click: () => {
+            setPosition('top-right');
+            tray?.setContextMenu(buildContextMenu());
+          },
+        },
+        {
           label: 'Bottom Left',
           type: 'radio',
           checked: currentPos === 'bottom-left',
