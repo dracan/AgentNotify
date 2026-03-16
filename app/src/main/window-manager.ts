@@ -50,7 +50,7 @@ function getXPosition(): number {
   const cursorPoint = screen.getCursorScreenPoint();
   const display = screen.getDisplayNearestPoint(cursorPoint);
   const { x: areaX, width: areaW } = display.workArea;
-  return areaX + areaW - WIDTH - MARGIN;
+  return areaX + MARGIN;
 }
 
 export function showNotification(title: string, message: string, accentColor: string, folder: string = ''): void {
