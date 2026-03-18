@@ -1,0 +1,43 @@
+name: Build & Release
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+          cache-dependency-path: app/pnpm-lock.yaml
+      - run: pnpm install
+        working-directory: app
+      - name: Set version from run number
+        run: pnpm version "0.${{ github.run_number }}.0" --no-git-tag-version
+        working-directory: app
+      - run: pnpm run build
+        working-directory: app
+      - run: pnpm exec electron-builder --win nsis
+        working-directory: app
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: AgentNotify-win-x64
+          path: app/release/*.exe
+      - uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v0.${{ github.run_number }}.0
+          name: Release 0.${{ github.run_number }}.0
+          files: app/release/*.exe
+          generate_release_notes: true
