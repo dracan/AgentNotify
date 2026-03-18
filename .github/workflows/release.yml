@@ -27,10 +27,8 @@ jobs:
         working-directory: app
       - run: pnpm run build
         working-directory: app
-      - run: pnpm exec electron-builder --win nsis
+      - run: pnpm exec electron-builder --win nsis --publish never
         working-directory: app
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - uses: actions/upload-artifact@v4
         with:
           name: AgentNotify-win-x64
