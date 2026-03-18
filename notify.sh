@@ -61,5 +61,5 @@ if command -v curl &>/dev/null; then
         --connect-timeout 1 --max-time 2 \
         -X POST "http://127.0.0.1:9456/notify" \
         -H "Content-Type: application/json" \
-        -d "{\"title\":\"$title\",\"message\":\"$message\",\"accentColor\":\"$accentColor\",\"folder\":\"$folder\"}" 2>/dev/null
+        -d "{\"title\":\"$title\",\"message\":\"$message\",\"accentColor\":\"$accentColor\",\"folder\":\"$folder\"}" 2>/dev/null || true
 fi
